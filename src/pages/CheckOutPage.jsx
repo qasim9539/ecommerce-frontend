@@ -52,36 +52,37 @@ const CheckOutPage = () => {
       }
   }
 
-  const handleOnlinePayment = async()=>{
+const handleOnlinePayment = async () => {
     try {
-        toast.loading("Loading...")
-        const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
-        const stripePromise = await loadStripe(stripePublicKey)
-       
-        const response = await Axios({
-            ...SummaryApi.payment_url,
-            data : {
-              list_items : cartItemsList,
-              addressId : addressList[selectAddress]?._id,
-              subTotalAmt : totalPrice,
-              totalAmt :  totalPrice,
-            }
-        })
-
-        const { data : responseData } = response
-
-        stripePromise.redirectToCheckout({ sessionId : responseData.id })
-        
-        if(fetchCartItem){
-          fetchCartItem()
-        }
-        if(fetchOrder){
-          fetchOrder()
-        }
+      const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+      const stripePromise = await loadStripe(stripePublicKey);
+  
+      const response = await Axios({
+        ...SummaryApi.payment_url,
+        data: {
+          list_items: cartItemsList,
+          addressId: addressList[selectAddress]?._id,
+          subTotalAmt: totalPrice,
+          totalAmt: totalPrice,
+        },
+      });
+  
+      console.log("API Response:", response); // Debugging step
+      const responseData = response?.data; // Optional chaining to avoid 'undefined'
+      if (!responseData) {
+        throw new Error("Response data is undefined");
+      }
+  
+      stripePromise.redirectToCheckout({ sessionId: responseData.id });
+  
+      if (fetchCartItem) fetchCartItem();
+      if (fetchOrder) fetchOrder();
     } catch (error) {
-        AxiosToastError(error)
+      console.error("Error during online payment:", error); // Log the error
+      AxiosToastError(error); // Show toast for the error
     }
-  }
+  };
+  
   return (
     <section className='bg-blue-50'>
       <div className='container mx-auto p-4 flex flex-col lg:flex-row w-full gap-5 justify-between'>
