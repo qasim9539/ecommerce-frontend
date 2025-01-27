@@ -2,9 +2,12 @@ import axios from "axios";
 import SummaryApi , { baseURL } from "../common/SummaryApi.js";
 
 const Axios = axios.create({
-    baseURL : baseURL,
-    withCredentials : true
-})
+  baseURL: "https://ecommerce-backend-clkg.onrender.com", // Your backend URL
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 
 //sending access token in the header
 Axios.interceptors.request.use(
