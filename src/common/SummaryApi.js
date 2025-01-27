@@ -1,4 +1,4 @@
-export const baseURL = "https://ecommerce-backend-clkg.onrender.com"
+export const baseURL = import.meta.meta.env.VITE_URL_API
 
 const SummaryApi = {
     register : {
